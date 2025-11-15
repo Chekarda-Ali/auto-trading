@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    /* ✅ Core Next.js + React Settings */
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "preserve",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+
+    /* ✅ Type Checking & Build */
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+
+    /* ✅ Interop & Compatibility */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* ✅ For ShadCN, Tailwind, and Clean Imports */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+
+    /* ✅ Silence Deprecation Warnings for TS 6.x */
+    "ignoreDeprecations": "6.0",
+
+    /* ✅ Next.js Plugin */
+    "plugins": [{ "name": "next" }]
+  },
+
+  /* ✅ Project References (Optional but supported by Next.js) */
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+
+  /* ✅ File Inclusion */
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
