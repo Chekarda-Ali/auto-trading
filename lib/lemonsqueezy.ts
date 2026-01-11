@@ -35,7 +35,7 @@ export async function createCheckout(variantId: string, userId: string): Promise
       }
     );
 
-    return checkout.data?.attributes.url || '';
+    return (checkout.data as any)?.attributes?.url || '';
   } catch (error) {
     console.error('Error creating checkout:', error);
     throw new Error('Failed to create checkout session');

@@ -3,7 +3,7 @@ import { users } from './db/schema';
 import { eq } from 'drizzle-orm';
 import { FLAGS, devFlagEnabled, assertProdGuards } from './config';
 
-const DEFAULT_ADMIN_EMAILS = ['admin@arbitragebot.pro'];
+const DEFAULT_ADMIN_EMAILS = ['alichekarda21@gmail.com'];
 const ENV_ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '')
   .split(',')
   .map((s) => s.trim().toLowerCase())

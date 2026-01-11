@@ -35,8 +35,7 @@
 
   /* ✅ Project References (Optional but supported by Next.js) */
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    { "path": "./tsconfig.app.json" }
   ],
 
   /* ✅ File Inclusion */
