@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverActions: true,
+    serverActions: {},
   },
   images: {
     domains: ['images.unsplash.com', 'via.placeholder.com'],

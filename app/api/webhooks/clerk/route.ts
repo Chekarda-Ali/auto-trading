@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 import { WebhookEvent } from '@clerk/nextjs/server';
-import { db } from '../../../../lib/db';
-import { users } from '../../../../lib/db/schema';
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
+
+const ADMIN_EMAILS = ['alichekarda21@gmail.com'];
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,17 +42,21 @@ export async function POST(req: NextRequest) {
     if (eventType === 'user.created') {
       const { id, email_addresses, first_name, last_name, image_url } = evt.data;
       
+      const userEmail = email_addresses[0]?.email_address || '';
+      const isAdmin = ADMIN_EMAILS.includes(userEmail.toLowerCase());
+
       // Create user in database
       await db.insert(users).values({
-        id: `user_${id}`, // or use a cuid() if you prefer
+        id: id, // Use Clerk ID as the primary ID
         clerkId: id,
-        email: email_addresses[0]?.email_address || '',
-        firstName: first_name,
-        lastName: last_name,
-        imageUrl: image_url,
+        email: userEmail,
+        firstName: first_name || '',
+        lastName: last_name || '',
+        imageUrl: image_url || '',
+        isAdmin: isAdmin,
       });
 
-      console.log(`Created user in database: ${id}`);
+      console.log(`Created user in database: ${id}, Admin: ${isAdmin}`);
     }
 
     return NextResponse.json({ success: true });

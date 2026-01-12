@@ -13,6 +13,7 @@ const ADMIN_EMAILS = [...DEFAULT_ADMIN_EMAILS, ...ENV_ADMIN_EMAILS];
 export async function checkAdminAccess(userId: string): Promise<boolean> {
   try {
     assertProdGuards();
+    
     // Global override to grant admin to all users (dev-only)
     if (devFlagEnabled(FLAGS.GRANT_ADMIN_TO_ALL)) {
       return true;
@@ -53,4 +54,8 @@ export async function makeUserAdmin(userId: string): Promise<void> {
     console.error('Error making user admin:', error);
     throw new Error('Failed to update admin status');
   }
+}
+
+export function isAdminEmail(email: string): boolean {
+  return ADMIN_EMAILS.includes(email.toLowerCase());
 }

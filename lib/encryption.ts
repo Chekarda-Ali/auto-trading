@@ -1,4 +1,6 @@
 import crypto from 'crypto';
+import { promises as fs } from 'fs';
+import path from 'path';
 import { db } from './db';
 import { encryptionKeys } from './db/schema';
 import { eq } from 'drizzle-orm';
@@ -11,11 +13,34 @@ const SALT_LENGTH = 32;
 // Get or create master encryption key
 async function getMasterKey(): Promise<Buffer> {
   const masterKeyEnv = process.env.MASTER_ENCRYPTION_KEY;
-  if (!masterKeyEnv) {
-    throw new Error('MASTER_ENCRYPTION_KEY environment variable is required');
+  if (masterKeyEnv) {
+    if (!/^[0-9a-fA-F]{64}$/.test(masterKeyEnv)) {
+      throw new Error('MASTER_ENCRYPTION_KEY must be a 32-byte hex string');
+    }
+    return Buffer.from(masterKeyEnv, 'hex');
   }
 
-  return Buffer.from(masterKeyEnv, 'hex');
+  // Fallback for local development: persist a generated key to a file with restricted permissions.
+  const keyFile = path.join(process.cwd(), '.master_encryption_key');
+
+  try {
+    const fileContents = (await fs.readFile(keyFile, 'utf8')).trim();
+    if (!/^[0-9a-fA-F]{64}$/.test(fileContents)) {
+      throw new Error(`Invalid master key format in ${keyFile}`);
+    }
+    return Buffer.from(fileContents, 'hex');
+  } catch (err) {
+    // If file doesn't exist or is invalid, generate and try to persist a new master key
+    const newKey = crypto.randomBytes(32);
+    const hex = newKey.toString('hex');
+    try {
+      await fs.writeFile(keyFile, hex + '\n', { mode: 0o600 });
+      console.warn(`No MASTER_ENCRYPTION_KEY provided; generated and saved master key to ${keyFile}. Back it up securely.`);
+    } catch (writeErr) {
+      console.warn(`Failed to persist generated master key to ${keyFile}:`, writeErr);
+    }
+    return newKey;
+  }
 }
 
 // Get active encryption key from database

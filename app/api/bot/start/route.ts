@@ -10,9 +10,13 @@ import { getDbUser } from '../../../../lib/auth-utils';
 export async function POST(req: NextRequest) {
   try {
     const dbUser = await getDbUser();
+
+    if (!dbUser) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     
-    const subscription = await checkSubscription(dbUser.id);
-    if (!subscription.isActive) {
+    const subscription = await checkSubscription(dbUser.clerkId ?? dbUser.id);
+    if (!subscription?.isActive) {
       return NextResponse.json({ error: 'Active subscription required' }, { status: 403 });
     }
 

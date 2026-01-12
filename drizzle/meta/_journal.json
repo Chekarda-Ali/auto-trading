@@ -8,6 +8,13 @@
       "when": 1760006614724,
       "tag": "0000_redundant_bastion",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1768129208764,
+      "tag": "0001_omniscient_nomad",
+      "breakpoints": true
     }
   ]
 }
